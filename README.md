@@ -8,8 +8,9 @@
 
 ## Fitur
 
-1. Pagination, sorting, search pada API
-2. Soft delete
+1. Pagination, sorting, search pada API.
+2. Soft delete.
+3. Upload image to AWS S3.
 
 ## How to install
 

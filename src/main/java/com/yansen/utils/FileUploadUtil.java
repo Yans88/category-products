@@ -1,6 +1,8 @@
 package com.yansen.utils;
 
 import com.yansen.exceptions.ValidationErrorException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -11,9 +13,15 @@ import java.util.UUID;
 
 public class FileUploadUtil {
 
-
     private static final List<String> contentTypes = Arrays.asList("png", "jpeg", "jpg");
+    private final Logger logger = LoggerFactory.getLogger(FileUploadUtil.class);
 
+
+    /**
+     * @param file
+     * @param imageDir
+     * @return String
+     */
     public static String uploadImage(MultipartFile file, String imageDir) {
 
         String[] filepaths = file.getOriginalFilename().split("\\.");
@@ -35,4 +43,6 @@ public class FileUploadUtil {
 
         return generatedImageName;
     }
+
+
 }

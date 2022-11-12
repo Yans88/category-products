@@ -7,16 +7,13 @@ import com.yansen.entities.Category;
 import com.yansen.exceptions.DataNotFoundException;
 import com.yansen.exceptions.ValidationErrorException;
 import com.yansen.repositories.CategoryRepo;
-import com.yansen.utils.FileUploadUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,10 +31,11 @@ public class CategoryService {
     ModelMapper modelMapper;
 
     @Autowired
+    S3BucketStorage s3BucketStorage;
+
+    @Autowired
     private CategoryRepo categoryRepo;
 
-    @Value("${my.hostname}")
-    private String hostname;
 
     public CategoryResponse saveData(MultipartFile img, CategoryRequest request, Long id) throws FileNotFoundException {
 
@@ -55,11 +53,9 @@ public class CategoryService {
             categoryEntity.setId(id);
         }
         if (img != null && img.getSize() > 0) {
-            String imageDir = ResourceUtils.getURL("classpath:").getPath() + "static/uploads/categories/";
-            String fileName = FileUploadUtil.uploadImage(img, imageDir);
-            categoryEntity.setImg(hostname + "/uploads/categories/" + fileName);
+            String fileName = s3BucketStorage.uploadIMG(img, "categories", request.getCategoryName());
+            categoryEntity.setImg(fileName);
         }
-        System.out.println(categoryEntity.getImg());
         return convertToDto(categoryRepo.save(categoryEntity));
     }
 

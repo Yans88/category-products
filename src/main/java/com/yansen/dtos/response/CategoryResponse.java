@@ -3,13 +3,10 @@ package com.yansen.dtos.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
 
 @Getter
 @Setter
 public class CategoryResponse {
-    @Value("${my.hostname}")
-    private String hostname;
 
     private Long id;
 

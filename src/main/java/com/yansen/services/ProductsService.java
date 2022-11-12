@@ -9,16 +9,13 @@ import com.yansen.exceptions.DataNotFoundException;
 import com.yansen.exceptions.ValidationErrorException;
 import com.yansen.repositories.CategoryRepo;
 import com.yansen.repositories.ProductsRepo;
-import com.yansen.utils.FileUploadUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,17 +31,12 @@ public class ProductsService {
 
     @Autowired
     ModelMapper modelMapper;
-
+    @Autowired
+    S3BucketStorage s3BucketStorage;
     @Autowired
     private ProductsRepo productsRepo;
-
     @Autowired
     private CategoryRepo categoryRepo;
-
-
-    @Value("${my.hostname}")
-    private String hostname;
-
 
     public ProductResponse saveData(MultipartFile img, ProductRequest request, Long id) throws FileNotFoundException {
 
@@ -68,9 +60,8 @@ public class ProductsService {
             productEntity.setImg(productEntity2.getImg());
         }
         if (img != null && img.getSize() > 0) {
-            String imageDir = ResourceUtils.getURL("classpath:").getPath() + "static/uploads/products/";
-            String fileName = FileUploadUtil.uploadImage(img, imageDir);
-            productEntity.setImg(hostname + "/uploads/products/" + fileName);
+            String fileName = s3BucketStorage.uploadIMG(img, "products", request.getProductName());
+            productEntity.setImg(fileName);
         }
 
         return convertToDto(productsRepo.save(productEntity));
@@ -138,9 +129,8 @@ public class ProductsService {
             throw new DataNotFoundException("Data with ID: " + id + " not found");
         }
         Products productEntity = dt.get();
-        String imageDir = ResourceUtils.getURL("classpath:").getPath() + "static/uploads/products/";
-        String fileName = FileUploadUtil.uploadImage(img, imageDir);
-        productEntity.setImg(hostname + "/uploads/products/" + fileName);
+        String fileName = s3BucketStorage.uploadIMG(img, "products", productEntity.getProductName());
+        productEntity.setImg(fileName);
         return convertToDto(productsRepo.save(productEntity));
     }
 
