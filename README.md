@@ -7,6 +7,7 @@
 3. <a href="https://test-dayalima.herokuapp.com/swagger-ui/#/">Swagger untuk dokumentasi API.</a>
 
 ## Fitur
+
 1. Pagination, sorting, search pada API
 2. Soft delete
 
