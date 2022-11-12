@@ -1,10 +1,14 @@
 # category-products
 
-## Arsitektur & Fitur
+## Arsitektur
 
 1. Java 11 dan Spring Boot 2.7.
 2. Database menggunakan PostgreSQL.
 3. <a href="https://test-dayalima.herokuapp.com/swagger-ui/#/">Swagger untuk dokumentasi API.</a>
+
+## Fitur
+1. Pagination, sorting, search pada API
+2. Soft delete
 
 ## How to install
 
