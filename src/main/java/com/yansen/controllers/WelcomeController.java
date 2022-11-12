@@ -1,4 +1,4 @@
-package com.yansen;
+package com.yansen.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class WelcomeController {
 
     @GetMapping
-    public String welcone(){
+    public String welcone() {
         return "Welcome to spring boot API - Test DayaLima";
     }
-    
+
 }
